@@ -4,6 +4,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Body,
 } from '@nestjs/common';
 import { StorageService } from './storage.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -13,13 +14,13 @@ export class StorageController {
   constructor(private readonly storageService: StorageService) {}
 
   @UseInterceptors(FileInterceptor('file'))
-  @Post('upload')
-  async upload(@UploadedFile() file: Express.Multer.File) {
-    return this.storageService.upload(file);
+  @Post('ingest')
+  async ingest(@UploadedFile() file: Express.Multer.File) {
+    return this.storageService.ingest(file);
   }
 
-  @Get()
-  findAll() {
-    return this.storageService.findAll();
+  @Post('query')
+  async query(@Body() { query }: { query: string }) {
+    return await this.storageService.query(query);
   }
 }
